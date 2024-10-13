@@ -32,7 +32,7 @@ def random_matching(students: dict, courses: dict) -> dict:
     return matching
 
 
-def total_score(students: dict, matching: dict):
+def total_score(students: dict, matching: dict) -> int:
     total_score = 0
     for student, course in matching.items():
         try:
@@ -43,7 +43,7 @@ def total_score(students: dict, matching: dict):
     return total_score
 
 
-def random_swap(matching: dict, students: dict, courses: dict):
+def random_swap(matching: dict, students: dict, courses: dict) -> dict:
     new_matching = matching.copy()
     student = random_student(students)
     new_course = random_course(
@@ -100,7 +100,7 @@ def simulated_annealing(
 
 
 if __name__ == "__main__":
-    result = simulated_annealing(S, C)
+    result = simulated_annealing(S, C, logging=True)
     print(result)
     score = total_score(S, result)
     print(score)
