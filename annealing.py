@@ -2,22 +2,6 @@ import random
 import math
 from data import S, C
 
-# ST = {
-#     'Lee': {'M': 3, 'A': 2},
-#     'Becker': {'A': 2, 'M': 1},
-#     'Cirelli': {'A': 2, 'M': 2}
-# }
-# CT = {
-#     'M': 3,
-#     'A': 3
-# }
-# M = {
-#     'Lee': 'A',
-#     'Becker': 'A',
-#     'Cirelli': 'A'
-# }
-# print(course_full(M, CT, 'M'))
-
 def random_course(courses: dict) -> str:
     return random.choice(list(courses.keys()))
 
@@ -99,4 +83,5 @@ def simulated_annealing(
 if __name__ == '__main__':
     result = simulated_annealing(S, C)
     print(result)
-    print(total_score(S, result))
+    score = total_score(S, result)
+    print(score)
