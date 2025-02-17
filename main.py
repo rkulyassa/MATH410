@@ -34,12 +34,12 @@ def main():
         students,
         courses,
         logging=False,
-        max_iterations=50000,
+        max_iterations=10000,
         temperature=100,
         cooling_rate=0.99,
     )
     # print_matching(result)
-    print("Final score:", total_score(result))
+    print("Final score:", eval_score(result))
 
 
 if __name__ == "__main__":

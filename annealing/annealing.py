@@ -32,7 +32,24 @@ def random_matching(
     return matching
 
 
-def total_score(matching: list[Match]) -> int:
+def calculate_spread(matching: list[Match]) -> float:
+    filled_seats: dict[Course, int] = {}
+
+    for _, course in matching:
+        if course in filled_seats:
+            filled_seats[course] += 1
+        else:
+            filled_seats[course] = 1
+
+    mean = sum(filled_seats.values()) / len(filled_seats)
+
+    sum_squares = sum([(v - mean) ** 2 for v in filled_seats.values()])
+    variance = sum_squares / (len(filled_seats) - 1)
+
+    return variance
+
+
+def eval_score(matching: list[Match]) -> int:
     total_score = 0
     for student, course in matching:
         preference = next(
@@ -78,7 +95,7 @@ def annealing(
         initial_matching = random_matching(students, courses)
 
     current_matching = initial_matching
-    current_score = total_score(current_matching)
+    current_score = eval_score(current_matching)
 
     for i in range(max_iterations):
         if logging:
@@ -90,10 +107,11 @@ def annealing(
                 "| Temperature",
                 str(round(temperature, 4)),
             )
+
         new_matching = random_swap(
             current_matching, students, courses, max_tries=5
         )
-        new_score = total_score(new_matching)
+        new_score = eval_score(new_matching)
         # print_matching(new_matching)
         # print("New score:", new_score)
 

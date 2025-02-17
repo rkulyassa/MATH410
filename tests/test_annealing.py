@@ -59,9 +59,9 @@ class TestAnnealing(unittest.TestCase):
             self.assertIsInstance(match, Match)
 
     def test_total_score(self):
-        self.assertEqual(total_score(matchings[0]), 16)
-        self.assertEqual(total_score(matchings[1]), 13)
-        self.assertEqual(total_score(matchings[2]), 8)
+        self.assertEqual(eval_score(matchings[0]), 16)
+        self.assertEqual(eval_score(matchings[1]), 13)
+        self.assertEqual(eval_score(matchings[2]), 8)
 
     def test_annealing(self):
         result = annealing(students, courses, logging=True)
