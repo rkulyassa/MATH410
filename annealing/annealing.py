@@ -57,6 +57,12 @@ def eval_score(matching: list[Match]) -> int:
         )
         if preference:
             total_score += preference.weight
+
+    spread = calculate_spread(matching)
+
+    if spread > 0:
+        total_score /= spread
+
     return total_score
 
 
