@@ -39,7 +39,14 @@ def main():
         cooling_rate=0.99,
     )
     # print_matching(result)
-    print("Final score:", eval_score(result))
+    final_score = eval_score(result)
+    spread = calculate_spread(result)
+    print("Final score (modified):", final_score)
+    print("Final score (raw):", final_score + spread)
+
+    print("Final variance:", spread)
+
+    # print_matching(result)
 
 
 if __name__ == "__main__":

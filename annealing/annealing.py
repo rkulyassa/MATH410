@@ -49,6 +49,13 @@ def calculate_spread(matching: list[Match]) -> float:
     return variance
 
 
+def eval_penalty(matching: list[Match]) -> float:
+    weight_factor = 15
+    spread = calculate_spread(matching)
+    # print(spread)
+    return spread * weight_factor
+
+
 def eval_score(matching: list[Match]) -> int:
     total_score = 0
     for student, course in matching:
@@ -57,11 +64,6 @@ def eval_score(matching: list[Match]) -> int:
         )
         if preference:
             total_score += preference.weight
-
-    spread = calculate_spread(matching)
-
-    if spread > 0:
-        total_score /= spread
 
     return total_score
 
@@ -101,7 +103,9 @@ def annealing(
         initial_matching = random_matching(students, courses)
 
     current_matching = initial_matching
-    current_score = eval_score(current_matching)
+    current_score = eval_score(current_matching) - eval_penalty(
+        current_matching
+    )
 
     for i in range(max_iterations):
         if logging:
@@ -117,7 +121,7 @@ def annealing(
         new_matching = random_swap(
             current_matching, students, courses, max_tries=5
         )
-        new_score = eval_score(new_matching)
+        new_score = eval_score(new_matching) - eval_penalty(new_matching)
         # print_matching(new_matching)
         # print("New score:", new_score)
 
