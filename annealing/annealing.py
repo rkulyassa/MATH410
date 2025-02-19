@@ -44,7 +44,7 @@ def calculate_spread(matching: list[Match]) -> float:
     mean = sum(filled_seats.values()) / len(filled_seats)
 
     sum_squares = sum([(v - mean) ** 2 for v in filled_seats.values()])
-    variance = sum_squares / (len(filled_seats) - 1)
+    variance = sum_squares / len(filled_seats)
 
     return variance
 
