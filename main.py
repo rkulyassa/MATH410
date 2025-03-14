@@ -34,13 +34,13 @@ def main():
         students,
         courses,
         logging=False,
-        max_iterations=10000,
+        max_iterations=100000,
         temperature=100,
         cooling_rate=0.99,
     )
     # print_matching(result)
     final_score = eval_score(result)
-    spread = calculate_spread(result)
+    spread = calculate_spread(result, True)
     print("Final score (modified):", final_score)
     print("Final score (raw):", final_score + spread)
 

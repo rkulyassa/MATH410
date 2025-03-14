@@ -32,25 +32,32 @@ def random_matching(
     return matching
 
 
-def calculate_spread(matching: list[Match]) -> float:
-    filled_seats: dict[Course, int] = {}
+# FIX: should be based on percentage filled rather than just number of students
+
+
+def calculate_spread(matching: list[Match], print_spread: bool = False) -> float:
+    filled_seats: dict[Course, float] = {}
 
     for _, course in matching:
         if course in filled_seats:
-            filled_seats[course] += 1
+            filled_seats[course] += 1 / course.capacity
         else:
-            filled_seats[course] = 1
+            filled_seats[course] = 1 / course.capacity
 
     mean = sum(filled_seats.values()) / len(filled_seats)
 
     sum_squares = sum([(v - mean) ** 2 for v in filled_seats.values()])
     variance = sum_squares / len(filled_seats)
 
+    if print_spread:
+        for course in filled_seats:
+            print(f"{course} assigned {round(filled_seats[course] * course.capacity)} students")
+
     return variance
 
 
 def eval_penalty(matching: list[Match]) -> float:
-    weight_factor = 15
+    weight_factor = 100
     spread = calculate_spread(matching)
     # print(spread)
     return spread * weight_factor
