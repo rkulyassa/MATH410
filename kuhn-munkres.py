@@ -6,6 +6,7 @@ if __name__ == "__main__":
         reader = csv.reader(f)
         rows = list(reader)
     
+    # construct adjacency matrix
     matrix = []
     rows = [row[1:] for row in rows[1:]]
     for row in rows:
@@ -13,11 +14,13 @@ if __name__ == "__main__":
         for entry in row:
             if entry.strip():
                 v = int(entry.strip())
-                r.append(-v + 5)
+                r.append(-v + 5) # invert preferences to make it a minimization problem
             else:
-                r.append(DISALLOWED)
+                r.append(DISALLOWED) # analagous to infinity
         matrix.append(r)
 
+
+    # duplicate columns until the matrix is square
     i = 0
     while len(matrix) > len(matrix[0]):
         for row in matrix:
@@ -31,6 +34,8 @@ if __name__ == "__main__":
     # print(len(matrix))
     # print(len(matrix[0]))
 
+
+    # from https://software.clapper.org/munkres/
     m = Munkres()
     indexes = m.compute(matrix)
     print_matrix(matrix, msg='Lowest cost through this matrix:')
