@@ -67,6 +67,8 @@ class SimulatedAnnealing:
         with open(csv_file) as f:
             reader = csv.reader(f)
             rows = list(reader)
+        
+        self.preference_map = preference_map
 
         # Read courses from first 2 rows
         self.courses: list[Course] = []
@@ -139,7 +141,25 @@ class SimulatedAnnealing:
     def print_matching(self) -> None:
         for student, course in self.current_matching.items():
             print(f"'{student.name}' -> '{course.name}' ({student.preferences[course]})")
+    
+    def print_stats(self) -> None:
+        print("Stats for current matching:")
         print(f"Raw score: {self.eval_score(self.current_matching)}")
+
+        # Determine how many students got their nth choices
+        ranks = list(sorted(self.preference_map.values(), reverse=True))
+        choices: list[int] = [0 for _ in range(len(ranks))]
+        for student, course in self.current_matching.items():
+            preference = student.preferences[course]
+            rank = ranks.index(preference)
+            choices[rank] += 1
+
+        mean = 0
+        total = sum(choices)
+        for i, count in enumerate(choices):
+            print(f"{count} students got choice {i} (score {ranks[i]})")
+            mean += i * count / total
+        print(f"On average students received choice {mean}")
 
 
     def random_swap(self) -> tuple[Student, Course]:
@@ -159,7 +179,8 @@ class SimulatedAnnealing:
 
 
     def solve(self, log_verbose: bool = False) -> None:
-        for i in range(1000):
+        iterations = 200000
+        for i in range(iterations):
             if log_verbose:
                 print("="*20)
                 print(f"Iteration {i}")
@@ -191,31 +212,7 @@ class SimulatedAnnealing:
             self.temperature *= self.cooling_rate
             if log_verbose:
                 print(f"Temperature cooling to {self.temperature}")
-
-
-if __name__ == "__main__":
-    preference_map = {
-        0: -1000,
-        1: 0,
-        2: 10,
-        3: 20
-    }
-
-    # sa.solve(log_verbose=True)
-    results = []
-    for _ in range(100):
-        sa = SimulatedAnnealing(
-            csv_file="./data/trivial.csv",
-            preference_map=preference_map,
-            initial_temperature=100,
-            cooling_rate=0.995
-        )
-        sa.solve()
-        results.append(sa.eval_score(sa.current_matching))
-        # sa.print_matching()
-        # print(sa.temperature)
-    
-    # print(results)
-    print(sum(results) / len(results))
-
-
+            
+            progress_str = f"Progress: {i}/{iterations}".ljust(30)
+            score_str = f"Score: {current_score}"
+            print(progress_str + score_str, end='\r')
