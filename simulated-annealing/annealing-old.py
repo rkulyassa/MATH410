@@ -57,7 +57,7 @@ def calculate_spread(matching: list[Match], print_spread: bool = False) -> float
 
 
 def eval_penalty(matching: list[Match]) -> float:
-    weight_factor = 100
+    weight_factor = 7000
     spread = calculate_spread(matching)
     # print(spread)
     return spread * weight_factor
@@ -74,6 +74,8 @@ def eval_score(matching: list[Match]) -> int:
 
     return total_score
 
+def init_data() -> None:
+    
 
 def random_swap(
     matching: list[Match],

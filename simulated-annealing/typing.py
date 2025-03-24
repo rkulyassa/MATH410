@@ -16,6 +16,6 @@ class Student(NamedTuple):
     preferences: list[Preference]
 
 
-class Match(NamedTuple):
+class Assignment(NamedTuple):
     student: Student
     course: Course

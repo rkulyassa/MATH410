@@ -34,19 +34,29 @@ def main():
         students,
         courses,
         logging=False,
-        max_iterations=100000,
+        max_iterations=5000,
         temperature=100,
         cooling_rate=0.99,
     )
     # print_matching(result)
     final_score = eval_score(result)
     spread = calculate_spread(result, True)
+
     print("Final score (modified):", final_score)
     print("Final score (raw):", final_score + spread)
 
     print("Final variance:", spread)
 
     # print_matching(result)
+    # for match in result:
+    #     student_preferences = match.student.preferences
+    #     # for preference in student_preferences:
+    #     if match.course in [p.course for p in student_preferences]:
+    #         for preference in student_preferences:
+    #             if preference.course == match.course:
+    #                 print(preference.weight)
+    #     else:
+    #         print("Bad")
 
 
 if __name__ == "__main__":
