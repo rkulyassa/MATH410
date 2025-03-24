@@ -2,7 +2,7 @@ import csv
 from munkres import Munkres, print_matrix, DISALLOWED
 
 if __name__ == "__main__":
-    with open("data/FA22-HA copy.csv") as f:
+    with open("./data/test.csv") as f:
         reader = csv.reader(f)
         rows = list(reader)
     
@@ -14,7 +14,7 @@ if __name__ == "__main__":
         for entry in row:
             if entry.strip():
                 v = int(entry.strip())
-                r.append(-v + 5) # invert preferences to make it a minimization problem
+                r.append(v)
             else:
                 r.append(DISALLOWED) # analagous to infinity
         matrix.append(r)

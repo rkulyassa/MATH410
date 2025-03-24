@@ -67,7 +67,7 @@ class SimulatedAnnealing:
         with open(csv_file) as f:
             reader = csv.reader(f)
             rows = list(reader)
-        
+
         self.preference_map = preference_map
 
         # Read courses from first 2 rows
@@ -141,7 +141,8 @@ class SimulatedAnnealing:
     def print_matching(self) -> None:
         for student, course in self.current_matching.items():
             print(f"'{student.name}' -> '{course.name}' ({student.preferences[course]})")
-    
+
+
     def print_stats(self) -> None:
         print("Stats for current matching:")
         print(f"Raw score: {self.eval_score(self.current_matching)}")
@@ -220,7 +221,7 @@ class SimulatedAnnealing:
             self.temperature *= self.cooling_rate
             if log_verbose:
                 print(f"Temperature cooling to {self.temperature}")
-            
+
             progress_str = f"I: {i}"
             score_str = f"F: {current_score}"
             temperature_str = f"T: {self.temperature}"
@@ -228,3 +229,18 @@ class SimulatedAnnealing:
                 print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(20)}")
             else:
                 print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(20)}", end="\r")
+
+
+    def output_csv_for_ha(self, out_path: str) -> None:
+        seats_filled: dict[Course, int] = {course: 0 for course in self.courses}
+        for _, course in self.current_matching.items():
+            seats_filled[course] += 1
+
+        with open(out_path, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([","] + [course.name for course in self.courses])
+            writer.writerow([","] + [seats_filled[course] for course in self.courses])
+            for student in self.students:
+                writer.writerow([student.name] + [-student.preferences[course] for course in self.courses])
+
+        print(f"Wrote output minimization matrix to {out_path}")

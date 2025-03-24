@@ -45,6 +45,7 @@ def trial_2():
     sa.solve()
     sa.print_matching()
     sa.print_stats()
+    sa.output_csv_for_ha("./data/test.csv")
 
 if __name__ == "__main__":
     # trial_1()
