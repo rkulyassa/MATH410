@@ -161,6 +161,13 @@ class SimulatedAnnealing:
             mean += i * count / total
         print(f"On average students received choice {mean}")
 
+        seats_filled: dict[Course, int] = {course: 0 for course in self.courses}
+        for _, course in self.current_matching.items():
+            seats_filled[course] += 1
+
+        for course, seats in seats_filled.items():
+            print(f"Course '{course.name}' filled {seats}/{course.capacity}")
+
 
     def random_swap(self) -> tuple[Student, Course]:
         """
@@ -180,6 +187,7 @@ class SimulatedAnnealing:
 
     def solve(self, log_verbose: bool = False) -> None:
         iterations = 200000
+        # iterations = 1000
         for i in range(iterations):
             if log_verbose:
                 print("="*20)
@@ -213,6 +221,10 @@ class SimulatedAnnealing:
             if log_verbose:
                 print(f"Temperature cooling to {self.temperature}")
             
-            progress_str = f"Progress: {i}/{iterations}".ljust(30)
-            score_str = f"Score: {current_score}"
-            print(progress_str + score_str, end='\r')
+            progress_str = f"I: {i}"
+            score_str = f"F: {current_score}"
+            temperature_str = f"T: {self.temperature}"
+            if i % 10000 == 0:
+                print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(20)}")
+            else:
+                print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(20)}", end="\r")

@@ -28,7 +28,7 @@ def trial_1():
 def trial_2():
     preference_map = {
         0: -1000,
-        1: -10,
+        1: -50,
         2: 0,
         3: 50,
         4: 100,
@@ -37,8 +37,10 @@ def trial_2():
     sa = SimulatedAnnealing(
         csv_file="./data/FA22.csv",
         preference_map=preference_map,
-        initial_temperature=10000000000000000,
-        cooling_rate=0.995
+        # initial_temperature=1000,
+        # cooling_rate=0.995
+        initial_temperature=1e20,
+        cooling_rate=0.9995
     )
     sa.solve()
     sa.print_matching()

@@ -2,14 +2,14 @@ import csv
 from munkres import Munkres, print_matrix, DISALLOWED
 
 if __name__ == "__main__":
-    with open("data/FA22.csv") as f:
+    with open("data/FA22-HA copy.csv") as f:
         reader = csv.reader(f)
         rows = list(reader)
     
     # construct adjacency matrix
     matrix = []
-    rows = [row[1:] for row in rows[1:]]
-    for row in rows:
+    preference_rows = [row[1:] for row in rows[2:]]
+    for row in preference_rows:
         r = []
         for entry in row:
             if entry.strip():
@@ -21,13 +21,23 @@ if __name__ == "__main__":
 
 
     # duplicate columns until the matrix is square
-    i = 0
-    while len(matrix) > len(matrix[0]):
-        for row in matrix:
-            row.append(row[i])
-        i += 1
-        if i == 22:
-            i = 0
+    capacities = [int(v) for v in rows[1][1:]]
+    print("Capacities:", capacities)
+    for i, c in enumerate(capacities):
+        for _ in range(c - 1):
+            for row in matrix:
+                row.append(row[i])
+    
+    print("Rows (students):", len(matrix))
+    print("Columns (seats):", len(matrix[0]))
+
+    # i = 0
+    # while len(matrix) > len(matrix[0]):
+    #     for row in matrix:
+    #         row.append(row[i])
+    #     i += 1
+    #     if i == len(matrix):
+    #         i = 0
     
     # for m in matrix:
     #     print(m)
@@ -38,10 +48,10 @@ if __name__ == "__main__":
     # from https://software.clapper.org/munkres/
     m = Munkres()
     indexes = m.compute(matrix)
-    print_matrix(matrix, msg='Lowest cost through this matrix:')
+    # print_matrix(matrix, msg='Lowest cost through this matrix:')
     total = 0
     for row, column in indexes:
         value = matrix[row][column]
         total += value
-        print(f'({row}, {column}) -> {value}')
+        # print(f'({row}, {column}) -> {value}')
     print(f'total cost: {total}')
