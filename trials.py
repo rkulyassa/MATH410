@@ -39,8 +39,8 @@ def trial_2():
         preference_map=preference_map,
         # initial_temperature=1000,
         # cooling_rate=0.995
-        initial_temperature=1e20,
-        cooling_rate=0.9995
+        initial_temperature=100,
+        cooling_rate=0.99
     )
     sa.solve()
     sa.print_matching()

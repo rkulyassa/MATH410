@@ -1,16 +1,19 @@
 import matplotlib.pyplot as plt
+import re
 
-# Sample data
-x = [1, 2, 3, 4, 5]
-y = [1, 4, 9, 16, 25]
+with open("trial.txt") as f:
+    lines = f.readlines()
 
-# Create the plot
-plt.plot(x, y)
+data = []
 
-# Add labels and title
-plt.xlabel("X axis")
-plt.ylabel("Y axis")
-plt.title("Simple Line Graph")
+for line in lines:
+    if line.startswith("I:"):
+        data.append(list(map(float, re.findall(r'[-+]?\d*\.\d+e[+-]?\d+|[-+]?\d+', line))))
 
-# Show the plot
+plt.plot([d[0] for d in data], [d[1] for d in data])
+
+plt.xlabel("Iteration")
+plt.ylabel("Score")
+plt.title("T=100, CR=0.99")
+
 plt.show()
