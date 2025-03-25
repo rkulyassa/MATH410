@@ -2,6 +2,7 @@ import csv
 from munkres import Munkres, print_matrix, DISALLOWED
 
 if __name__ == "__main__":
+    # with open("./data/test.csv") as f:
     with open("./data/test.csv") as f:
         reader = csv.reader(f)
         rows = list(reader)
@@ -53,5 +54,5 @@ if __name__ == "__main__":
     for row, column in indexes:
         value = matrix[row][column]
         total += value
-        # print(f'({row}, {column}) -> {value}')
+        print(f'({row}, {column}) -> {value}')
     print(f'total cost: {total}')
