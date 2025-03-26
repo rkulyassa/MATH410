@@ -3,7 +3,7 @@ from munkres import Munkres, print_matrix, DISALLOWED
 
 if __name__ == "__main__":
     # with open("./data/test.csv") as f:
-    with open("./data/test.csv") as f:
+    with open("./data/FA22-HA.csv") as f:
         reader = csv.reader(f)
         rows = list(reader)
     
@@ -48,7 +48,8 @@ if __name__ == "__main__":
 
     # from https://software.clapper.org/munkres/
     m = Munkres()
-    indexes = m.compute(matrix)
+    matrix2 = matrix.copy()
+    indexes = m.compute(matrix2)
     # print_matrix(matrix, msg='Lowest cost through this matrix:')
     total = 0
     for row, column in indexes:

@@ -36,7 +36,7 @@ def trial_2():
         5: 1000
     }
     sa = SimulatedAnnealing(
-        csv_file="./data/40.csv",
+        csv_file="./data/FA22.csv",
         preference_map=preference_map,
         # initial_temperature=1000,
         # cooling_rate=0.995
