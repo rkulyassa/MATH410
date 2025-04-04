@@ -187,8 +187,8 @@ class SimulatedAnnealing:
 
 
     def solve(self, log_verbose: bool = False) -> None:
-        iterations = 200000
-        # iterations = 1000
+        # iterations = 200000
+        iterations = 10000
         for i in range(iterations):
             if log_verbose:
                 print("="*20)
@@ -205,12 +205,13 @@ class SimulatedAnnealing:
             current_score = self.eval_score(self.current_matching)
             candidate_score = self.eval_score(self.candidate_matching)
             delta = candidate_score - current_score
-            if candidate_score > current_score: # accept improvements
+            if delta >= 0: # accept improvements
                 if log_verbose:
                     print(f"Accepting swap of student '{student.name}' to course '{course.name}', improving the score by {delta}")
                 self.current_matching = self.candidate_matching
             else: # accept worse candidates on temperature-conditioned probability
-                acceptance_probability = math.exp(delta / self.temperature)
+                # acceptance_probability = math.exp(delta / self.temperature)
+                acceptance_probability = delta / self.temperature
                 if random.random() < acceptance_probability:
                     self.current_matching = self.candidate_matching
                     if log_verbose:
@@ -225,10 +226,11 @@ class SimulatedAnnealing:
             progress_str = f"I: {i}"
             score_str = f"F: {current_score}"
             temperature_str = f"T: {self.temperature}"
-            if i % 10000 == 0:
-                print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(20)}")
+            acceptance_probability_str = f"P: {delta / self.temperature}"
+            if i % 1000 == 0:
+                print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(25)} | {acceptance_probability_str.ljust(20)}")
             else:
-                print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(20)}", end="\r")
+                print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(25)} | {acceptance_probability_str.ljust(20)}", end="\r")
 
 
     def output_csv_for_ha(self, out_path: str) -> None:
