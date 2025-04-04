@@ -45,8 +45,9 @@ class SimulatedAnnealing:
         csv_file (str): The .csv file to read data from.
         preference_map (dict[int, int]): Optional, a mapping of raw csv values to custom values.
         initial_matching (dict[Student, Course]): Optional, start with a predefined matching.
-        initial_temperature (float): Set the initial temperature, default 100.0
-        cooling_rate (float): Set the cooling rate, default 0.99
+        min_iterations (int): The minimum number of iterations to perform.
+        initial_p (float): The initial probability of accepting the worst possible swap based on the given preferences.
+        final_p (float): The probability of accepting the worse possible swap once min_iterations is reached.
 
     Attributes:
         students (list[Student]): The list of students to be assigned.
@@ -61,8 +62,9 @@ class SimulatedAnnealing:
         csv_file: str,
         preference_map: dict[int, int] = {},
         initial_matching: dict[Student, Course] = None,
-        initial_temperature: float = 100.0,
-        cooling_rate: float = 0.99
+        min_iterations: int = 10000,
+        initial_p: float = 0.9,
+        final_p: float = 0.1,
     ):
         with open(csv_file) as f:
             reader = csv.reader(f)
@@ -108,9 +110,12 @@ class SimulatedAnnealing:
         else:
             self.randomize_matching()
 
-        # Set initial temperature and cooling rate
-        self.temperature = initial_temperature
-        self.cooling_rate = cooling_rate
+        # Dynamically calculate initial temperature and cooling rate
+        delta_max = abs(max(preference_map.values()) - min(preference_map.values()))
+        print(delta_max)
+        initial_t = delta_max / initial_p
+        self.temperature = initial_t
+        self.cooling_rate = (delta_max / (initial_t * final_p)) ** (1 / min_iterations)
 
 
     def course_full(self, course: Course) -> bool:

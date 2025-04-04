@@ -38,12 +38,11 @@ def trial_2():
     sa = SimulatedAnnealing(
         csv_file="./data/FA22.csv",
         preference_map=preference_map,
-        # initial_temperature=1000,
-        # cooling_rate=0.995
-        initial_temperature=1222.22,
-        cooling_rate=1.00022
     )
-    sa.solve()
+
+    print(sa.temperature)
+    print(sa.cooling_rate)
+    # sa.solve()
     # sa.print_matching()
     # sa.print_stats()
     # sa.output_csv_for_ha("./data/test.csv")
