@@ -2,8 +2,8 @@ import csv
 from munkres import Munkres, print_matrix, DISALLOWED
 
 if __name__ == "__main__":
-    # with open("./data/test.csv") as f:
-    with open("./data/FA22-HA.csv") as f:
+    with open("./data/test.csv") as f:
+    # with open("./data/FA22-HA.csv") as f:
         reader = csv.reader(f)
         rows = list(reader)
     

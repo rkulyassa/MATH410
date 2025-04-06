@@ -63,6 +63,7 @@ class SimulatedAnnealing:
         preference_map: dict[int, int] = {},
         initial_matching: dict[Student, Course] = None,
         min_iterations: int = 10000,
+        stopping_iterations: int = 5000,
         initial_p: float = 0.9,
         final_p: float = 0.1,
     ):
@@ -102,6 +103,9 @@ class SimulatedAnnealing:
                 preferences=preferences
             )
             self.students.append(student)
+        
+        self.min_iterations = min_iterations
+        self.stopping_iterations = stopping_iterations
 
         # Use the initial matching if one was passed, otherwise generate random
         self.current_matching: dict[Student, Course] = {}
@@ -112,10 +116,9 @@ class SimulatedAnnealing:
 
         # Dynamically calculate initial temperature and cooling rate
         delta_max = abs(max(preference_map.values()) - min(preference_map.values()))
-        print(delta_max)
-        initial_t = delta_max / initial_p
+        initial_t = -delta_max / math.log(initial_p)
         self.temperature = initial_t
-        self.cooling_rate = (delta_max / (initial_t * final_p)) ** (1 / min_iterations)
+        self.cooling_rate = (-delta_max / (initial_t * math.log(final_p))) ** (1 / min_iterations)
 
 
     def course_full(self, course: Course) -> bool:
@@ -175,9 +178,10 @@ class SimulatedAnnealing:
             print(f"Course '{course.name}' filled {seats}/{course.capacity}")
 
 
-    def random_swap(self) -> tuple[Student, Course]:
+    def random_drop_add(self) -> tuple[Student, Course]:
         """
-        Performs a random swap on the current candidate matching.
+        Performs a random drop/add of a student on the current candidate matching.
+        Reassigns student from course i to course j where i != j.
 
         Returns:
             A tuple[Student, Course] representing the new assignment resulting from the swap.
@@ -189,53 +193,71 @@ class SimulatedAnnealing:
             if not self.course_full(new_course) and new_course != self.current_matching[student]:
                 self.candidate_matching[student] = new_course
                 return (student, new_course)
+    
+    def random_swap(self) -> None:
+        student_a = random.choice(self.students)
+        student_b = random.choice(self.students)
+
+        course_a = self.candidate_matching[student_a]
+        course_b = self.candidate_matching[student_b]
+
+        self.candidate_matching[student_a] = course_b
+        self.candidate_matching[student_b] = course_a
 
 
-    def solve(self, log_verbose: bool = False) -> None:
+    def solve(self, log_stats: bool = False, log_alterations: bool = False, persist_output_every: int = 1000) -> None:
         # iterations = 200000
-        iterations = 10000
-        for i in range(iterations):
-            if log_verbose:
-                print("="*20)
-                print(f"Iteration {i}")
-                self.print_matching()
-
+        # iterations = 10000
+        # for i in range(iterations):
+        i = 0
+        j = 0
+        while i < self.min_iterations or j < self.stopping_iterations:
             # Set candidate to a shallow copy of the current
             self.candidate_matching = self.current_matching.copy()
 
-            # Perform a random swap on the candidate
-            student, course = self.random_swap()
+            # Perform a random move on the candidate
+            move = random.choice([self.random_drop_add, self.random_swap])
+            move()
+            
+            # student, course = self.random_swap()
 
             # Compare score of candidate with current
             current_score = self.eval_score(self.current_matching)
             candidate_score = self.eval_score(self.candidate_matching)
             delta = candidate_score - current_score
-            if delta >= 0: # accept improvements
-                if log_verbose:
-                    print(f"Accepting swap of student '{student.name}' to course '{course.name}', improving the score by {delta}")
+            if delta > 0: # accept improvements
+                # if log_alterations:
+                #     print(f"Accepting drop/add of student '{student.name}' to course '{course.name}', improving the score by {delta}")
                 self.current_matching = self.candidate_matching
+
+                # reset stopping criterion counter
+                j = 0
             else: # accept worse candidates on temperature-conditioned probability
                 # acceptance_probability = math.exp(delta / self.temperature)
-                acceptance_probability = delta / self.temperature
+                if i >= self.min_iterations:
+                    j += 1
+
+                acceptance_probability = math.exp(delta / self.temperature)
                 if random.random() < acceptance_probability:
                     self.current_matching = self.candidate_matching
-                    if log_verbose:
-                        print(f"Accepting bad swap of student '{student.name}' to course '{course.name}' with probability {acceptance_probability}, decreasing the score by {delta}")
-                elif log_verbose:
-                    print(f"Rejecting swap of student '{student.name}' to course '{course.name}', which would decrease the score by {delta}")
+                    # if log_alterations:
+                    #     print(f"Accepting bad swap of student '{student.name}' to course '{course.name}' with probability {acceptance_probability}, decreasing the score by {delta}")
+                # elif log_alterations:
+                #     print(f"Rejecting swap of student '{student.name}' to course '{course.name}', which would decrease the score by {delta}")
 
             self.temperature *= self.cooling_rate
-            if log_verbose:
-                print(f"Temperature cooling to {self.temperature}")
 
-            progress_str = f"I: {i}"
+            progress_str = f"I: {i} | j: {j}"
             score_str = f"F: {current_score}"
             temperature_str = f"T: {self.temperature}"
             acceptance_probability_str = f"P: {delta / self.temperature}"
-            if i % 1000 == 0:
-                print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(25)} | {acceptance_probability_str.ljust(20)}")
-            else:
-                print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(25)} | {acceptance_probability_str.ljust(20)}", end="\r")
+            if log_stats:
+                if i % persist_output_every == 0:
+                    print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(25)} | {acceptance_probability_str.ljust(20)}")
+                else:
+                    print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(25)} | {acceptance_probability_str.ljust(20)}", end="\r")
+            
+            i += 1
 
 
     def output_csv_for_ha(self, out_path: str) -> None:

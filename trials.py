@@ -38,14 +38,16 @@ def trial_2():
     sa = SimulatedAnnealing(
         csv_file="./data/FA22.csv",
         preference_map=preference_map,
+        min_iterations=100000,
+        stopping_iterations=10000
     )
 
-    print(sa.temperature)
-    print(sa.cooling_rate)
-    # sa.solve()
-    # sa.print_matching()
-    # sa.print_stats()
-    # sa.output_csv_for_ha("./data/test.csv")
+    # print(sa.temperature)
+    # print(sa.cooling_rate)
+    sa.solve(log_stats=True, persist_output_every=5000)
+    sa.print_matching()
+    sa.print_stats()
+    sa.output_csv_for_ha("./data/test.csv")
 
 if __name__ == "__main__":
     # trial_1()
