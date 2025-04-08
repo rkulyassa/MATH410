@@ -236,24 +236,17 @@ class SimulatedAnnealing:
             candidate_score = self.eval_score(self.candidate_matching)
             delta = candidate_score - current_score
             if delta > 0: # accept improvements
-                # if log_alterations:
-                #     print(f"Accepting drop/add of student '{student.name}' to course '{course.name}', improving the score by {delta}")
                 self.current_matching = self.candidate_matching
 
                 # reset stopping criterion counter
                 j = 0
             else: # accept worse candidates on temperature-conditioned probability
-                # acceptance_probability = math.exp(delta / self.temperature)
                 if i >= self.min_iterations:
                     j += 1
 
                 acceptance_probability = math.exp(delta / self.temperature)
                 if random.random() < acceptance_probability:
                     self.current_matching = self.candidate_matching
-                    # if log_alterations:
-                    #     print(f"Accepting bad swap of student '{student.name}' to course '{course.name}' with probability {acceptance_probability}, decreasing the score by {delta}")
-                # elif log_alterations:
-                #     print(f"Rejecting swap of student '{student.name}' to course '{course.name}', which would decrease the score by {delta}")
 
             self.temperature *= self.cooling_rate
 

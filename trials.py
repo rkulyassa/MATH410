@@ -36,7 +36,8 @@ def trial_2():
         5: 100
     }
     sa = SimulatedAnnealing(
-        csv_file="./data/FA22.csv",
+        # csv_file="./data/FA22.csv",
+        csv_file="./data/40.csv",
         preference_map=preference_map,
         min_iterations=100000,
         stopping_iterations=10000,
