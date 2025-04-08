@@ -39,7 +39,7 @@ def trial_2():
         csv_file="./data/FA22.csv",
         preference_map=preference_map,
         min_iterations=100000,
-        stopping_iterations=10000
+        stopping_iterations=10000,
     )
 
     # print(sa.temperature)

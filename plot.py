@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import re
+import sys
 
-with open("trial.txt") as f:
+with open(sys.argv[1]) as f:
     lines = f.readlines()
 
 data = []
@@ -10,10 +11,20 @@ for line in lines:
     if line.startswith("I:"):
         data.append(list(map(float, re.findall(r'[-+]?\d*\.\d+e[+-]?\d+|[-+]?\d+', line))))
 
-plt.plot([d[0] for d in data], [d[2] for d in data])
+fig, ax1 = plt.subplots()
 
-plt.xlabel("Iteration")
-plt.ylabel("Score")
-plt.title("T=100, CR=0.99")
+ax1.plot([d[0] for d in data], [d[2] for d in data], linewidth=0.5, label='Score')
+ax1.set_xlabel("Iteration")
+ax1.set_ylabel("Score", color='b')
+ax1.tick_params(axis='y', labelcolor='b')
+
+ax2 = ax1.twinx()
+ax2.plot([d[0] for d in data], [d[3] for d in data], 'r-', linewidth=0.5, label='Temperature')
+ax2.set_ylabel("Temperature", color='r')
+ax2.tick_params(axis='y', labelcolor='r')
+
+
+
+plt.title("P_i = 0.9, P_f = 0.1")
 
 plt.show()
