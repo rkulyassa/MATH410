@@ -46,6 +46,7 @@ class SimulatedAnnealing:
         preference_map (dict[int, int]): Optional, a mapping of raw csv values to custom values.
         initial_matching (dict[Student, Course]): Optional, start with a predefined matching.
         min_iterations (int): The minimum number of iterations to perform.
+        stopping_iterations (int): The maximum number of iterations to terminate execution after no improvements and min_iterations is reached.
         initial_p (float): The initial probability of accepting the worst possible swap based on the given preferences.
         final_p (float): The probability of accepting the worse possible swap once min_iterations is reached.
 
@@ -122,11 +123,17 @@ class SimulatedAnnealing:
 
 
     def course_full(self, course: Course) -> bool:
+        """
+        Returns true if the course is full.
+        """
         current = sum(c == course for c in self.current_matching.values())
         return current >= course.capacity
 
 
     def randomize_matching(self) -> None:
+        """
+        Sets self.current_matching to a randomized matching.
+        """
         for student in self.students:
             while True:
                 course = random.choice(self.courses)
@@ -195,6 +202,9 @@ class SimulatedAnnealing:
                 return (student, new_course)
     
     def random_swap(self) -> None:
+        """
+        Performs a random swap of two students' assignments.
+        """
         student_a = random.choice(self.students)
         student_b = random.choice(self.students)
 
@@ -261,6 +271,10 @@ class SimulatedAnnealing:
 
 
     def output_csv_for_ha(self, out_path: str) -> None:
+        """
+        Produces custom output to test against hungarian algorithm.
+        See kuhn-munkres.py
+        """
         seats_filled: dict[Course, int] = {course: 0 for course in self.courses}
         for _, course in self.current_matching.items():
             seats_filled[course] += 1

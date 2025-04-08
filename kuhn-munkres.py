@@ -32,19 +32,6 @@ if __name__ == "__main__":
     print("Rows (students):", len(matrix))
     print("Columns (seats):", len(matrix[0]))
 
-    # i = 0
-    # while len(matrix) > len(matrix[0]):
-    #     for row in matrix:
-    #         row.append(row[i])
-    #     i += 1
-    #     if i == len(matrix):
-    #         i = 0
-    
-    # for m in matrix:
-    #     print(m)
-    # print(len(matrix))
-    # print(len(matrix[0]))
-
 
     # from https://software.clapper.org/munkres/
     m = Munkres()
