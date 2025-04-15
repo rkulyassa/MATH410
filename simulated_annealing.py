@@ -254,11 +254,10 @@ class SimulatedAnnealing:
             score_str = f"F: {current_score}"
             temperature_str = f"T: {self.temperature}"
             acceptance_probability_str = f"P: {delta / self.temperature}"
-            if log_stats:
-                if i % persist_output_every == 0:
-                    print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(25)} | {acceptance_probability_str.ljust(20)}")
-                else:
-                    print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(25)} | {acceptance_probability_str.ljust(20)}", end="\r")
+            if i % persist_output_every == 0:
+                print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(25)} | {acceptance_probability_str.ljust(20)}")
+            elif log_stats:
+                print(f"{progress_str.ljust(20)} | {score_str.ljust(20)} | {temperature_str.ljust(25)} | {acceptance_probability_str.ljust(20)}", end="\r")
             
             i += 1
 

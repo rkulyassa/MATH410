@@ -1,4 +1,5 @@
 import csv
+import time
 from simulated_annealing import SimulatedAnnealing
 
 def trial_1():
@@ -50,9 +51,35 @@ def trial_2():
     sa.print_stats()
     sa.output_csv_for_ha("./data/test.csv")
 
+def trial_3():
+    preference_map = {
+        0: -1000,
+        1: -50,
+        2: 0,
+        3: 25,
+        4: 75,
+        5: 100
+    }
+    sa = SimulatedAnnealing(
+        csv_file="./data/FA22/16x.csv",
+        preference_map=preference_map,
+        min_iterations=100000,
+        stopping_iterations=10000,
+    )
+
+    sa.solve(persist_output_every=10000)
+    # sa.print_matching()
+    sa.print_stats()
+    # sa.solve(log_stats=True, persist_output_every=5000)
+    sa.output_csv_for_ha("./data/test16x.csv")
+
 if __name__ == "__main__":
     # trial_1()
-    trial_2()
+    # trial_2()
+    start_time = time.perf_counter()
+    trial_3()
+    end_time = time.perf_counter()
+    print(f"Execution time: {end_time - start_time} seconds")
 
     # with open("data/FA22.csv") as f:
     #     reader = csv.reader(f)
