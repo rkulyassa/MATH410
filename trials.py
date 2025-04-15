@@ -61,7 +61,7 @@ def trial_3():
         5: 100
     }
     sa = SimulatedAnnealing(
-        csv_file="./data/FA22/16x.csv",
+        csv_file="./data/FA22/25.csv",
         preference_map=preference_map,
         min_iterations=100000,
         stopping_iterations=10000,
@@ -71,7 +71,7 @@ def trial_3():
     # sa.print_matching()
     sa.print_stats()
     # sa.solve(log_stats=True, persist_output_every=5000)
-    sa.output_csv_for_ha("./data/test16x.csv")
+    sa.output_csv_for_ha("./data/test25.csv")
 
 if __name__ == "__main__":
     # trial_1()
