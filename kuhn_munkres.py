@@ -5,7 +5,7 @@ from munkres import Munkres, print_matrix, DISALLOWED
 if __name__ == "__main__":
     start_time = time.perf_counter()
 
-    with open("./data/FA22/HA_number_of_fives.csv") as f:
+    with open("./data/test25.csv") as f:
     # with open("./data/FA22-HA.csv") as f:
         reader = csv.reader(f)
         rows = list(reader)
