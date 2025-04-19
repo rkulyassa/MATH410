@@ -1,6 +1,6 @@
 import csv
 
-with open('data/2014/CSEM 2014 choices.xlsx - Sheet1.csv', 'r') as f:
+with open('CSEM 2014 choices.xlsx - Sheet1.csv', 'r') as f:
     reader = csv.reader(f)
     data = list(reader)
 
