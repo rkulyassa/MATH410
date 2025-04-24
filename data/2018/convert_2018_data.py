@@ -1,6 +1,6 @@
 import csv
 
-with open('2018 DSEM Assignments.xlsx - Registration Form.csv', 'r') as f:
+with open('raw.csv', 'r') as f:
     reader = csv.reader(f)
     data = list(reader)
 
