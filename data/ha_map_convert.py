@@ -2,12 +2,12 @@ import csv
 import sys
 
 preference_map = {
-    0: -1000,
+    0: 1000,
     1: 0,
-    2: 5,
-    3: 10,
-    4: 30,
-    5: 100
+    2: -5,
+    3: -10,
+    4: -30,
+    5: -100
 }
 
 with open(sys.argv[1]) as f:

@@ -1,5 +1,6 @@
 import csv
 import sys
+from math import ceil
 
 with open(sys.argv[1]) as f:
     reader = csv.reader(f)
@@ -13,6 +14,6 @@ for i in range(len(rows[0][1:])):
     sums.append(sum(nums))
 
 total = sum(sums)
-result = [round(s/total*(len(rows)-2)) for s in sums]
+result = [ceil(s/total*(len(rows)-2)) for s in sums]
 print(result)
 print(sum(result))
