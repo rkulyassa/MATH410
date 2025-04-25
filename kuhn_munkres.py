@@ -25,37 +25,27 @@ if __name__ == "__main__":
             else:
                 r.append(DISALLOWED) # analagous to infinity
         matrix.append(r)
-    
-    for r in matrix:
-        print(r)
+
+    # for r in matrix:
+    #     print(r)
 
 
-    # duplicate columns until the matrix is square
+    # construct expanded matrix by duplicating columns
     capacities = [int(v) for v in rows[1][1:]]
-    print("Capacities:", capacities)
-    offset = 0
-    for i, c in enumerate(capacities):
-        for _ in range(c - 1):
-            for j, row in enumerate(matrix):
-                matrix[j] = row[:i+offset] + [row[i+offset]] + row[i+offset:]
-        offset += c-1
-    for r in matrix:
-        print(r)
-    
-    print("Rows (students):", len(matrix))
-    print("Columns (seats):", len(matrix[0]))
-
+    expanded_matrix = []
+    seat_to_course = []
+    for row in matrix:
+        new_row = []
+        for i, cap in enumerate(capacities):
+            new_row.extend([row[i]] * cap)
+            seat_to_course.extend([i] * cap)
+        expanded_matrix.append(new_row)
 
     # from https://software.clapper.org/munkres/
     m = Munkres()
-    matrix2 = matrix.copy()
-    indexes = m.compute(matrix2)
+    indexes = m.compute(expanded_matrix)
 
     course_fulfillment = {course: 0 for course in course_titles}
-
-    seat_to_course = []
-    for i, cap in enumerate(capacities):
-        seat_to_course.extend([i] * cap)
 
     for row, col in indexes:
         course_index = seat_to_course[col]
@@ -66,10 +56,10 @@ if __name__ == "__main__":
         print(f"Course '{course}' filled {course_fulfillment[course]}/{capacities[i]}")
 
     preference_values = [-100, -30, -10, -5, 0, 1000]
-    choice_counts = {v: 0 for v in range(5)}
+    choice_counts = {v: 0 for v in range(6)}
     total_choice_index = 0
     for row, col in indexes:
-        value = matrix[row][col]
+        value = expanded_matrix[row][col]
         # print(f'({row}, {col}) -> {value}')
         choice_index = preference_values.index(value)
         total_choice_index += choice_index
