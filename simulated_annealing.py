@@ -63,10 +63,11 @@ class SimulatedAnnealing:
         csv_file: str,
         preference_map: dict[int, int] = {},
         initial_matching: dict[Student, Course] = None,
-        min_iterations: int = 10000,
-        stopping_iterations: int = 5000,
-        initial_p: float = 0.9,
+        min_iterations: int = 100000,
+        stopping_iterations: int = 10000,
+        initial_p: float = 0.7,
         final_p: float = 0.1,
+        penalty_weight: float = 0.0
     ):
         with open(csv_file) as f:
             reader = csv.reader(f)
@@ -121,6 +122,8 @@ class SimulatedAnnealing:
         self.temperature = initial_t
         self.cooling_rate = (-delta_max / (initial_t * math.log(final_p))) ** (1 / min_iterations)
 
+        self.penalty_weight = penalty_weight
+
 
     def course_full(self, course: Course) -> bool:
         """
@@ -149,9 +152,20 @@ class SimulatedAnnealing:
         """
         return sum(student.preferences[course] for student, course in matching.items())
 
-    # @staticmethod
-    # def eval_objective(matching: dict[Student, Course]) -> int:
+    @staticmethod
+    def eval_variance(courses: list[Course], matching: dict[Student, Course]) -> float:
+        course_fulfillments: dict[Course, int] = {c: 0 for c in courses}
+        for _, course in matching.items():
+            course_fulfillments[course] += 1
 
+        mean = sum(course_fulfillments.values()) / len(course_fulfillments)
+        variance = 0
+        for f in course_fulfillments.values():
+            variance += (f-mean)*(f-mean)
+
+        variance /= len(course_fulfillments)
+
+        return variance
 
     def print_matching(self) -> None:
         for student, course in self.current_matching.items():
@@ -161,6 +175,7 @@ class SimulatedAnnealing:
     def print_stats(self) -> None:
         print("Stats for current matching:")
         print(f"Raw score: {self.eval_score(self.current_matching)}")
+        print(f"Course fulfillment variance: {self.eval_variance(self.courses, self.current_matching)}")
 
         # Determine how many students got their nth choices
         ranks = list(sorted(self.preference_map.values(), reverse=True))
@@ -232,9 +247,13 @@ class SimulatedAnnealing:
             
             # student, course = self.random_swap()
 
+            # Calculate penalties
+            current_penalty = self.eval_variance(self.courses, self.current_matching) * self.penalty_weight
+            candidate_penalty = self.eval_variance(self.courses, self.candidate_matching) * self.penalty_weight
+
             # Compare score of candidate with current
-            current_score = self.eval_score(self.current_matching)
-            candidate_score = self.eval_score(self.candidate_matching)
+            current_score = self.eval_score(self.current_matching) - current_penalty
+            candidate_score = self.eval_score(self.candidate_matching) - candidate_penalty
             delta = candidate_score - current_score
             if delta > 0: # accept improvements
                 self.current_matching = self.candidate_matching
@@ -265,8 +284,8 @@ class SimulatedAnnealing:
 
     def output_csv_for_ha(self, out_path: str) -> None:
         """
-        Produces custom output to test against hungarian algorithm.
-        See kuhn-munkres.py
+        Produces custom output to test with hungarian algorithm (HA).
+        See kuhn_munkres.py
         """
         seats_filled: dict[Course, int] = {course: 0 for course in self.courses}
         for _, course in self.current_matching.items():

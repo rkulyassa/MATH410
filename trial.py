@@ -20,9 +20,10 @@ sa = SimulatedAnnealing(
     # stopping_iterations=194000,
     # min_iterations=279000,
     # stopping_iterations=279000,
-    min_iterations=322000,
-    stopping_iterations=322000,
-    initial_p=0.7
+    # min_iterations=322000,
+    # stopping_iterations=322000,
+    # initial_p=0.7
+    penalty_weight=1000
 )
 
 if __name__ == "__main__":
@@ -30,7 +31,7 @@ if __name__ == "__main__":
 
     sa.solve(persist_output_every=10000)
     sa.print_stats()
-    sa.output_csv_for_ha("./data/test.csv")
+    # sa.output_csv_for_ha("./data/test.csv")
 
     end_time = time.perf_counter()
     print(f"Execution time: {end_time - start_time} seconds")

@@ -15,7 +15,7 @@ with open(sys.argv[1]) as f:
     data = list(reader)
 
 for i, row in enumerate(data[2:]):
-    for j, entry in  enumerate(row[1:]):
+    for j, entry in enumerate(row[1:]):
         data[i+2][j+1] = preference_map[int(entry)]
 
 with open(sys.argv[2], 'w') as f:
