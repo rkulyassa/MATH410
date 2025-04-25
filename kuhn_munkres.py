@@ -56,10 +56,12 @@ if __name__ == "__main__":
         print(f"Course '{course}' filled {course_fulfillment[course]}/{capacities[i]}")
 
     preference_values = [-100, -30, -10, -5, 0, 1000]
-    choice_counts = {v: 0 for v in range(6)}
+    choice_counts = {v: 0 for v in range(5)}
     total_choice_index = 0
+    total_score = 0
     for row, col in indexes:
         value = expanded_matrix[row][col]
+        total_score += value
         # print(f'({row}, {col}) -> {value}')
         choice_index = preference_values.index(value)
         total_choice_index += choice_index
@@ -69,7 +71,9 @@ if __name__ == "__main__":
         print(f"Students who got choice {choice + 1}: {count}")
 
     average_choice = total_choice_index / len(indexes)
-    print(f"Average choice index: {average_choice:.2f}")
+    print(f"Average choice index: {average_choice:.3f}")
+
+    print(f"Total score:", total_score)
 
     end_time = time.perf_counter()
     print(f"Execution time: {end_time - start_time} seconds")

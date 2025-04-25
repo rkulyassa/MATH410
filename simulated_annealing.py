@@ -227,6 +227,7 @@ class SimulatedAnnealing:
 
             # Perform a random move on the candidate
             move = random.choice([self.random_drop_add, self.random_swap])
+            # move = self.random_swap
             move()
             
             # student, course = self.random_swap()
