@@ -14,8 +14,8 @@ preference_map = {
 sa = SimulatedAnnealing(
     csv_file=sys.argv[1],
     preference_map=preference_map,
-    # min_iterations=100000,
-    # stopping_iterations=10000,
+    min_iterations=100000,
+    stopping_iterations=10000,
     # min_iterations=194000,
     # stopping_iterations=194000,
     # min_iterations=279000,
@@ -23,13 +23,13 @@ sa = SimulatedAnnealing(
     # min_iterations=322000,
     # stopping_iterations=322000,
     # initial_p=0.7
-    penalty_weight=1000
+    # penalty_weight=10000
 )
 
 if __name__ == "__main__":
     start_time = time.perf_counter()
 
-    sa.solve(persist_output_every=10000)
+    sa.solve(persist_output_every=1000)
     sa.print_stats()
     # sa.output_csv_for_ha("./data/test.csv")
 
