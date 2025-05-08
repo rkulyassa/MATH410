@@ -29,12 +29,12 @@ ax2.set_ylabel("Temperature", color='r')
 ax2.tick_params(axis='y', labelcolor='r')
 ax2.set_zorder(2)
 
-ax3 = ax1.twinx()
-ax3.spines["right"].set_position(("axes", 1.1))  # 1.1 means 10% to the right of the original
-ax3.plot([d[0] for d in data], [d[1] for d in data], 'g-', linewidth=0.5, label='Iterations since improvement')
-ax3.set_ylabel("Iterations since improvement", color='g')
-ax3.tick_params(axis='y', labelcolor='g')
-ax3.set_zorder(1)
+# ax3 = ax1.twinx()
+# ax3.spines["right"].set_position(("axes", 1.1))  # 1.1 means 10% to the right of the original
+# ax3.plot([d[0] for d in data], [d[1] for d in data], 'g-', linewidth=0.5, label='Iterations since improvement')
+# ax3.set_ylabel("Iterations since improvement", color='g')
+# ax3.tick_params(axis='y', labelcolor='g')
+# ax3.set_zorder(1)
 
 
 # plt.title("P_i = 0.7, P_f = 0.1")
